@@ -10,6 +10,7 @@ import com.github.kittinunf.fuel.core.ResponseResultOf
 import com.github.kittinunf.fuel.core.extensions.cUrlString
 import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.github.kittinunf.fuel.core.requests.CancellableRequest
+import com.google.gson.annotations.SerializedName
 import com.yubstore.piking.service.KtorClient.httpClient
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
@@ -127,6 +128,35 @@ data class Piking(
     //val lines_products: ArrayList<Products>
 )
 
+/*data class SetPiking(
+    @SerializedName("idcliente")
+    val idcliente: String?,
+    @SerializedName("action")
+    val action: String
+)
+data class PostPiking(
+    @SerializedName("status")
+    val status: Boolean,
+    @SerializedName("body")
+    val body: ArrayList<Piking> = arrayListOf()
+)
+//@Serializable
+data class Piking(
+    @SerializedName("orders_id")
+    val orders_id: String,
+    @SerializedName("date_purchased")
+    val date_purchased: String,
+    @SerializedName("orders_type_id")
+    val orders_type_id: String,
+    @SerializedName("IDCLIENTE")
+    val IDCLIENTE: String,
+    @SerializedName("envios_estados_id")
+    val envios_estados_id: String,
+    @SerializedName("city")
+    val city: String?,
+    @SerializedName("postcode")
+    val postcode: String?,
+)*/
 // objeto Productos
 @Serializable
 data class SetProduct(
@@ -151,15 +181,19 @@ data class Products(
     val barcode: String,
     val products_name: String,
     val products_quantity: String,
-    val image: String?
+    val image: String?,
+    var piking: Int?
 )
 // almacen funcion
 @OptIn(InternalAPI::class)
 suspend fun postPiking(setPiking: SetPiking): HttpResponse {
     /*val response = httpClient.use {
         it.post("https://yuubbb.com/pre/dani_bugs/yuubbbshop/piking_api"){
-            header(HttpHeaders.ContentType,ContentType.Application.Json)
+            contentType(ContentType.Application.Json)
             setBody(setPiking)
+            /*timeout {
+                requestTimeoutMillis = 6000
+            }*/
         }
 
     }*/
@@ -167,18 +201,30 @@ suspend fun postPiking(setPiking: SetPiking): HttpResponse {
         contentType(ContentType.Application.Json)//Application.Json
         setBody(setPiking)
         timeout {
-            requestTimeoutMillis = 6000
+            requestTimeoutMillis = 10000
         }
 
     }
+    //httpClient.close()
     return response
 }
 // productos
 suspend fun postProducts(setProducts: SetProduct): HttpResponse{
-    val response: HttpResponse = httpClient.post("https://yuubbb.com/pre/dani/yuubbbshop/piking_api") {
+    /*val response: HttpResponse = httpClient.post("https://yuubbb.com/pre/dani/yuubbbshop/piking_api") {
         contentType(ContentType.Application.Json)//Application.Json
         setBody(setProducts)
 
+    }*/
+    //httpClient.close()
+    /*println("RESPOSE: ${response.status.value}")
+    if(response.status.value == 200){
+        httpClient.close()
+    }*/
+    val response: HttpResponse = httpClient.use{
+        it.post("https://yuubbb.com/pre/dani/yuubbbshop/piking_api"){
+            contentType(ContentType.Application.Json)//Application.Json
+            setBody(setProducts)
+        }
     }
     return response
 }

@@ -8,6 +8,7 @@ buildscript {
         fecycle_version = "2.2.0"
         kotlin_version = '1.6.10'
         napier_version = '1.4.1'
+        lifecycle_version = "2.5.1"
     }
     repositories {
         google()

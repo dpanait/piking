@@ -25,6 +25,7 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
 private const val TIME_OUT = 60_000
+private const val TIME_OUT_MILI: Long = 1000 * 60 * 5
 object KtorClient {
     private val json = kotlinx.serialization.json.Json {
         prettyPrint = true
@@ -35,8 +36,9 @@ object KtorClient {
     val httpClient = HttpClient(Android){
         engine {
             // this: AndroidEngineConfig
-            connectTimeout = 200_000
-            socketTimeout = 100_000
+            connectTimeout = TIME_OUT
+            socketTimeout = TIME_OUT
+
         }
         install(ContentNegotiation) {
             json(Json {
@@ -45,7 +47,7 @@ object KtorClient {
                 ignoreUnknownKeys = true
             })
         }
-        /*install(Logging){
+        install(Logging){
             logger = object : Logger {
                 override fun log(message: String) {
                     Napier.v("HTTP Client", null, message)
@@ -53,16 +55,16 @@ object KtorClient {
                 }
             }
             level = LogLevel.ALL
-        }*/
+        }
         install(HttpTimeout) {
-            socketTimeoutMillis = 1000 * 60 * 5
-            requestTimeoutMillis = 1000 * 60 * 5
-            connectTimeoutMillis = 1000 * 60 * 5
+            socketTimeoutMillis = TIME_OUT_MILI
+            requestTimeoutMillis = TIME_OUT_MILI
+            connectTimeoutMillis = TIME_OUT_MILI
         }
         install(HttpCache)
 
 
-    }.also { Napier.base(DebugAntilog()) }
+    }//.also { Napier.base(DebugAntilog()) }
     /*val httpClient = HttpClient {
         followRedirects = true
 

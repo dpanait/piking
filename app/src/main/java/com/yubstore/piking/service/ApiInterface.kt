@@ -6,6 +6,8 @@ import retrofit2.http.POST
 
 interface ApiInterface {
 
-    @POST("/piking_api")
-    fun sendReq(@Body requestModel: SetPiking) : Call<PostPiking>
+    @POST("piking_api")
+    fun postOrders(@Body requestModel: SetPiking) : Call<PostPiking>
+    @POST("piking_api")
+    fun postProducts(@Body requestModel: SetProduct) : Call<PostProducts>
 }

@@ -1,8 +1,8 @@
 package com.yubstore.piking.views.piking
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
@@ -15,6 +15,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavHostController
 import com.yubstore.piking.util.SearchView
 import com.yubstore.piking.util.TopBar
+import com.yubstore.piking.views.common.LoadingAnimation
 
 @Composable
 fun PikingScreen(
@@ -30,18 +31,33 @@ fun PikingScreen(
             buttonIcon = Icons.Rounded.Menu,
             onButtonClicked = { openDrawer() }
         )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+        ){
+            SearchView(state = textState)
+        }
+
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            SearchView(state = textState)
-            PikingList(navController,textState, idCliente)
-            Text(text = "Piking Page content here.")
+
+
+                PikingList(navController, textState, idCliente)
+                Text(text = "Piking Page content here.")
 
             /*if(almacenes.value.body.isNotEmpty()){
                 Text(almacenes.value.body[0].toString())
             }*/
         }
+        /*LazyRow {
+            // your code
+        }
+        Row(verticalAlignment = Alignment.Bottom) {
+            Button(onClick = { /*TODO*/ }) {
+                Text("buttom b")
+            }
+        }*/
     }
 }
