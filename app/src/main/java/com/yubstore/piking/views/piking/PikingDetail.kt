@@ -57,16 +57,17 @@ fun PikingDetail(
 ){
     val coroutineScope = rememberCoroutineScope()
     println("IdCliente: $idCliente OrdersId: $ordersId")
+    val cajasId = product_search?.cajasId
     val pikingModel = PikingModel()
     var pikingItemStatus =  remember{ pikingModel.pikingItemStatus }//mutableStateOf(true)
     var pikingItem =  remember { pikingModel.pikingItem }
     if(pikingItem.size == 0) {
-        pikingModel.getPikingItem(coroutineScope, idCliente, ordersId)
+        pikingModel.getPikingItem(coroutineScope, idCliente, ordersId, cajasId.toString())
     }
 
      //getListOfCountries(coroutineScope, idCliente)
     //var pikingItem = remember{mutableStateListOf<Products>()} //mutableStateOf<List<Products>>(arrayListOf())
-    //getPikingItem(coroutineScope, idCliente, ordersId, pikingItem, pikingItemStatus)
+    //getPikingItem(coroutineScope, idCliente, ordersId, cajasId, pikingItem, pikingItemStatus)
     println("PikingItem details: ${pikingItem.size}")
     println("product_search: $product_search")
     var chekstatus = remember { mutableStateOf(false)}
@@ -88,78 +89,156 @@ fun PikingDetail(
         }
         resultList
     }
+    Column() {
+        Row(){
+            SearchView(state = textState)
+        }
+        Row (
+            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround.also { Alignment.CenterVertically }
+        ){
 
-    Row(){
-        SearchView(state = textState)
-    }
-    Row (modifier = Modifier.padding(0.dp, 60.dp, 0.dp, 0.dp) ){
+            /*Button(
+                onClick = {
+                    println("cHEACK ALL: $pikingItem")
 
-        Button(
-            onClick = {
-                println("cHEACK ALL: $pikingItem")
+                    chekstatus.value = true
 
-                chekstatus.value = true
-
-                var piking = mutableStateListOf<Products>()
+                    var piking = mutableStateListOf<Products>()
                     pikingItem.forEachIndexed { index, item ->
 
-                    item.piking = 1
+                        item.piking = 1
                         piking.add(item)
-                    println("Item checkAll: $item")
-                }
+                        println("Item checkAll: $item")
+                    }
 
-                println("Check all: $pikingItem")
-                pikingItem.clear()
-                pikingItem.addAll(piking)
-                //runBlocking {
+                    println("Check all: $pikingItem")
+                    pikingItem.clear()
+                    pikingItem.addAll(piking)
+                    //runBlocking {
                     //TimeUnit.SECONDS.sleep(2)
-                //}
-                if(filteredProducts.size > 2) {
-                    coroutineScope.launch {
-                        // Animate scroll to the 10th item
-                        listState.animateScrollToItem(index = filteredProducts.size)
+                    //}
+                    if(filteredProducts.size > 2) {
+                        coroutineScope.launch {
+                            // Animate scroll to the 10th item
+                            listState.animateScrollToItem(index = filteredProducts.size)
+                        }
+                    }
+
+                }
+            ) {
+                Text(text = "Selecionar todos")
+
+            }*/
+            IconButton(
+                modifier = Modifier
+                    .size(60.dp),
+
+                onClick = {
+                    chekstatus.value = true
+
+                    var piking = mutableStateListOf<Products>()
+                    pikingItem.forEachIndexed { index, item ->
+
+                        item.piking = 1
+                        piking.add(item)
+                        println("Item checkAll: $item")
+                    }
+
+                    println("Check all: $pikingItem")
+                    pikingItem.clear()
+                    pikingItem.addAll(piking)
+                    if(filteredProducts.size > 2) {
+                        coroutineScope.launch {
+                            // Animate scroll to the 10th item
+                            listState.animateScrollToItem(index = filteredProducts.size)
+                        }
+                    }
+
+                }
+            ) {
+
+                Icon(
+                    modifier = Modifier.size(60.dp),
+                    imageVector = Icons.Filled.CheckCircle,
+                    contentDescription = "Localized description",
+                    tint = Color.Green
+                )
+            }
+            //Spacer(modifier = Modifier.padding(10.dp))
+            /*Button(
+                onClick = {
+                    println("Unchack ALL: $pikingItem")
+
+                    chekstatus.value = false
+
+                    var piking = mutableStateListOf<Products>()
+                    pikingItem.forEachIndexed { index, item ->
+
+                        item.piking = 0
+                        piking.add(item)
+                        println("Item checkAll: $item")
+                    }
+
+                    println("Deselecionar todos: $pikingItem")
+                    pikingItem.clear()
+                    pikingItem.addAll(piking)
+                    //pikingModel.checkAll(pikingItem)
+                    //runBlocking {
+                    //TimeUnit.SECONDS.sleep(2)
+                    //}
+                    if(filteredProducts.size > 2){
+                        coroutineScope.launch {
+                            // Animate scroll to the 10th item
+                            listState.animateScrollToItem(index = 0)
+                        }
+                    }
+
+                    //isLoading = false
+                }
+            ) {
+                Text(text = "Deselecionar todos")
+            }*/
+            IconButton(
+                modifier = Modifier
+                    .size(60.dp),
+
+                onClick = {
+                    chekstatus.value = false
+
+                    var piking = mutableStateListOf<Products>()
+                    pikingItem.forEachIndexed { index, item ->
+
+                        item.piking = 0
+                        piking.add(item)
+                        //println("Item checkAll: $item")
+                    }
+
+                    //println("Deselecionar todos: $pikingItem")
+                    pikingItem.clear()
+                    pikingItem.addAll(piking)
+
+                    if(filteredProducts.size > 2){
+                        coroutineScope.launch {
+                            // Animate scroll to the 10th item
+                            listState.animateScrollToItem(index = 0)
+                        }
                     }
                 }
+            ) {
 
+                Icon(
+                    modifier = Modifier.size(60.dp),
+                    imageVector = Icons.Filled.CheckCircle,
+                    contentDescription = "Localized description",
+                    tint = Color.LightGray
+                )
             }
-        ) {
-            Text(text = "Check all")
-        }
-        Spacer(modifier = Modifier.padding(10.dp))
-        Button(
-            onClick = {
-                println("Unchack ALL: $pikingItem")
 
-                chekstatus.value = false
-
-                var piking = mutableStateListOf<Products>()
-                pikingItem.forEachIndexed { index, item ->
-
-                    item.piking = 0
-                    piking.add(item)
-                    println("Item checkAll: $item")
-                }
-
-                println("Check all: $pikingItem")
-                pikingItem.clear()
-                pikingItem.addAll(piking)
-                //pikingModel.checkAll(pikingItem)
-                //runBlocking {
-                    //TimeUnit.SECONDS.sleep(2)
-                //}
-                if(filteredProducts.size > 2){
-                    coroutineScope.launch {
-                        // Animate scroll to the 10th item
-                        listState.animateScrollToItem(index = 0)
-                    }
-                }
-
-            //isLoading = false
-            }
-        ) {
-            Text(text = "UnCheck all")
         }
     }
+
 
     println("filteredProducts: ${filteredProducts.size}")
     BuildLazyColumn(listState, filteredProducts, pikingItemStatus.value, chekstatus)
@@ -229,6 +308,9 @@ fun BuildLazyColumn(
                             Text((quantity).toString() + " Ud")
                         }
                         Row() {
+                            Text(product.location.toString())
+                        }
+                        Row() {
                             if (product.image != null) {
                                 AsyncImage(
                                     model = ImageRequest.Builder(LocalContext.current)
@@ -242,38 +324,6 @@ fun BuildLazyColumn(
                                 )
                             }
                         }
-
-
-                        IconButton(
-                            modifier = Modifier.size(20.dp).align(Alignment.Start.also { Arrangement.SpaceEvenly }),
-
-                            onClick = {
-                                println("Nota")
-                            }
-                        ) {
-
-                            Icon(
-                                modifier = Modifier.size(40.dp),
-                                imageVector = Icons.Filled.ShoppingCart,
-                                contentDescription = "Localized description"
-                            )
-                        }
-                        IconButton(
-                            modifier = Modifier.size(20.dp).align(Alignment.End.also { Arrangement.SpaceEvenly }),
-
-                            onClick = {
-                                println("Nota")
-                            }
-                        ) {
-
-                            Icon(
-                                modifier = Modifier.size(40.dp),
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = "Localized description"
-                            )
-                        }
-
-
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -358,12 +408,19 @@ fun BuildLazyColumn(
 }
 
 
-fun getPikingItem(coroutineScope: CoroutineScope, idCliente: String, ordersId: String, pikingItem: SnapshotStateList<Products>, pikingItemStatus: MutableState<Boolean>){
+fun getPikingItem(
+    coroutineScope: CoroutineScope,
+    idCliente: String,
+    ordersId: String,
+    cajasId: String,
+    pikingItem: SnapshotStateList<Products>,
+    pikingItemStatus: MutableState<Boolean>
+){
 
     coroutineScope.launch {
 
         kotlin.runCatching {
-            postProducts(SetProduct(idCliente, ordersId, "products"))//ArrayList<String>()
+            postProducts(SetProduct(idCliente, ordersId, cajasId,"products"))//ArrayList<String>()
             //Test(SetPiking(idCliente, "get_picking"))
 
         }.onSuccess {
@@ -392,6 +449,6 @@ fun getPikingItem(coroutineScope: CoroutineScope, idCliente: String, ordersId: S
 @Preview
 @Composable
 fun PreviewPikingDetail() {
-    PikingDetail("192", "2263162", ProductSearch("192", "2263162"))
+    PikingDetail("192", "2263162", ProductSearch("192", "2263162", "294"))
 }
 

@@ -72,10 +72,11 @@ fun PikingList(
                     onItemClick = { item ->
                         println("Item: $item")
                         var ordersId = item.orders_id
+                        var cajasId = item.cajas_id
                         //var idCliente = item.IDCLIENTE
                         navController.currentBackStackEntry?.savedStateHandle?.set(
                             "product_search",
-                            ProductSearch(ordersId, idCliente)
+                            ProductSearch(ordersId, idCliente, cajasId)
                         )
                         navController.navigate("products/$idCliente/$ordersId")
                         //PikingDetail(idCliente, ordersId)
@@ -88,8 +89,8 @@ fun PikingList(
 
 fun getListOfCountries(coroutineScope: CoroutineScope, idCliente: String?): ArrayList<Piking>{
     println("ID CLIENTE: $idCliente")
-    val products = arrayListOf(Products("","", "", "", "", "", "", "", 0))
-    var ordersList = arrayListOf(Piking("", "", "", "", "", "", ""))
+    val products = arrayListOf(Products("","", "", "", "", "", "", "", 0, ""))
+    var ordersList = arrayListOf(Piking("", "", "", "","", "", "", ""))
     //var postOrders =  PostPiking(false , ordersList)//ArrayList<String>()
 
 

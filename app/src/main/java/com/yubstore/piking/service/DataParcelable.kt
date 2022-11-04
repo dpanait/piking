@@ -6,5 +6,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class ProductSearch(
     val idClient: String,
-    val ordersId: String?
+    val ordersId: String?,
+    val cajasId: String
 ): Parcelable
+

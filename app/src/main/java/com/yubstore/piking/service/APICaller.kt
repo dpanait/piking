@@ -121,6 +121,7 @@ data class Piking(
     val orders_id: String,
     val date_purchased: String,
     val orders_type_id: String,
+    val cajas_id: String,
     val IDCLIENTE: String,
     val envios_estados_id: String,
     val city: String?,
@@ -162,6 +163,7 @@ data class Piking(
 data class SetProduct(
     val idcliente: String,
     val orders_id: String,
+    val cajas_id: String,
     val action: String
 )
 
@@ -182,7 +184,8 @@ data class Products(
     val products_name: String,
     val products_quantity: String,
     val image: String?,
-    var piking: Int?
+    var piking: Int?,
+    var location: String?
 )
 // almacen funcion
 @OptIn(InternalAPI::class)

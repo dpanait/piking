@@ -41,7 +41,7 @@ class PikingModel: ViewModel() {
         idCliente: String?
     ) {
         val setPiking = SetPiking(idCliente, "get_picking")
-        /*val response = ServiceBuilder.buildService(ApiInterface::class.java)
+        val response = ServiceBuilder.buildService(ApiInterface::class.java)
         response.postOrders(setPiking).enqueue(
             object : Callback<PostPiking> {
                 override fun onResponse(
@@ -78,9 +78,9 @@ class PikingModel: ViewModel() {
                 }
 
             }
-        )*/
+        )
 
-        try {
+        /*try {
 
             viewModelScope.launch {
 
@@ -118,11 +118,16 @@ class PikingModel: ViewModel() {
         } catch (ex: Exception) {
             println("Exception: ${ex.message}, ${ex.cause}, ${ex.stackTrace}")
             // Handle all other exceptions here
-        }
+        }*/
     }
-    fun getPikingItem(coroutineScope: CoroutineScope, idCliente: String, ordersId: String){
-        val setProduct = SetProduct(idCliente, ordersId, "products")
-        /*val response = ServiceBuilder.buildService(ApiInterface::class.java)
+    fun getPikingItem(
+        coroutineScope: CoroutineScope,
+        idCliente: String,
+        ordersId: String,
+        cajasId: String
+    ){
+        val setProduct = SetProduct(idCliente, ordersId, cajasId, "products")
+        val response = ServiceBuilder.buildService(ApiInterface::class.java)
         response.postProducts(setProduct).enqueue(
             object : Callback<PostProducts> {
                 override fun onResponse(
@@ -156,13 +161,13 @@ class PikingModel: ViewModel() {
                 }
 
             }
-        )*/
+        )
 
-        viewModelScope.launch {
+        /*viewModelScope.launch {
 
             println("pikingItemStatus: ${pikingItemStatus.value}")
             kotlin.runCatching {
-                postProducts(SetProduct(idCliente, ordersId, "products"))//ArrayList<String>()
+                postProducts(setProduct)//ArrayList<String>()
                 //Test(SetPiking(idCliente, "get_picking"))
 
             }.onSuccess {
@@ -183,7 +188,7 @@ class PikingModel: ViewModel() {
                 println("Error: $it")
                 viewModelScope.cancel()
             }
-        }
+        }*/
     }
     fun checkAll(piking: SnapshotStateList<Products>) {
 

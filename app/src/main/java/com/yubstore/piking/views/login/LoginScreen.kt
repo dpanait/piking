@@ -21,11 +21,8 @@ import androidx.compose.ui.unit.sp
 //import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.yubstore.piking.model.LoginModel
-import com.yubstore.piking.service.SetLogin
-import com.yubstore.piking.service.postLogin
+import com.yubstore.piking.service.*
 //import androidx.compose.runtime.produceState
-import com.yubstore.piking.service.PostLogin
-import com.yubstore.piking.service.PostPiking
 import com.yubstore.piking.util.ResponseParser
 import io.ktor.client.call.*
 import io.ktor.client.statement.*

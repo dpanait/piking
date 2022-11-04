@@ -2,6 +2,7 @@ package com.yubstore.piking.service
 
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface ApiInterface {
@@ -10,4 +11,7 @@ interface ApiInterface {
     fun postOrders(@Body requestModel: SetPiking) : Call<PostPiking>
     @POST("piking_api")
     fun postProducts(@Body requestModel: SetProduct) : Call<PostProducts>
+
+    @GET("version.txt")
+    fun getVersion(): Call<String>
 }
