@@ -30,9 +30,11 @@ fun PikingList(
 ) {
     val coroutineScope = rememberCoroutineScope()
     //val pikingModel = PikingModel()
+    val orders = remember { pikingModel.pikingList }//getListOfCountries(coroutineScope, idCliente)
+    if(orders.size == 0) {
+        pikingModel.getPiking(coroutineScope, idCliente)
+    }
 
-    pikingModel.getPiking(coroutineScope, idCliente)
-    val orders = pikingModel.pikingList//getListOfCountries(coroutineScope, idCliente)
     println("orders: $orders")
     var filteredCountries: SnapshotStateList<Piking>
     var isLoading = remember { pikingModel.pikingListStatus }
@@ -52,22 +54,18 @@ fun PikingList(
                 orders
             } else {
                 val resultList: SnapshotStateList<Piking> = SnapshotStateList<Piking>()
+                println()
                 for (order in orders) {
-                    if (order.city?.lowercase() == searchedText.lowercase()) {
+                    if (order.city?.lowercase() != null && order.city?.lowercase().contains(searchedText.lowercase())) {
+                        resultList.addAll(listOf(order))
+                    } else if(order.orders_sku?.lowercase().contains(searchedText.lowercase())){
                         resultList.addAll(listOf(order))
                     }
-
-                    //for (product in products) {
-                    /*if (products.lines_products.forEach(item {  })find(it.barcode == searchedText.lowercase())
-                ) {
-                    resultList.plus(products)
-                }*/
-                    //}
                 }
                 resultList
             }
             this.items(filteredCountries) { piking ->
-                OrdersListItem(
+                PikingListItem(
                     piking = piking,
                     onItemClick = { item ->
                         println("Item: $item")
@@ -76,9 +74,10 @@ fun PikingList(
                         //var idCliente = item.IDCLIENTE
                         navController.currentBackStackEntry?.savedStateHandle?.set(
                             "product_search",
-                            ProductSearch(ordersId, idCliente, cajasId)
+                            ProductSearch(idCliente.toString(), ordersId, cajasId)
                         )
                         navController.navigate("products/$idCliente/$ordersId")
+
                         //PikingDetail(idCliente, ordersId)
                     }
                 )
@@ -89,8 +88,8 @@ fun PikingList(
 
 fun getListOfCountries(coroutineScope: CoroutineScope, idCliente: String?): ArrayList<Piking>{
     println("ID CLIENTE: $idCliente")
-    val products = arrayListOf(Products("","", "", "", "", "", "", "", 0, ""))
-    var ordersList = arrayListOf(Piking("", "", "", "","", "", "", ""))
+    val products = arrayListOf(Products("","", "", "", "", "", "", "", 0, "", 0, false))
+    var ordersList = arrayListOf(Piking("", "", "", "","", "", "", "", ""))
     //var postOrders =  PostPiking(false , ordersList)//ArrayList<String>()
 
 

@@ -23,14 +23,13 @@ import androidx.compose.ui.unit.sp
 import com.yubstore.piking.R
 
 @Composable
-fun SearchView(state: MutableState<TextFieldValue>) {
+fun SearchView(state: MutableState<TextFieldValue>, modifier: Modifier) {
     TextField(
         value = state.value,
         onValueChange = { value ->
             state.value = value
         },
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = modifier,
         textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
         leadingIcon = {
             Icon(

@@ -29,15 +29,18 @@ sealed class DrawerScreens(val title: String, val route: String, var icon: Int, 
     object Home : DrawerScreens("Home", "home/{idcliente}", R.mipmap.home, "1")
     object Account : DrawerScreens("Account", "account", R.mipmap.user,"")
     object Piking : DrawerScreens("Piking", "piking/{idcliente}", R.mipmap.piking,"192")
-    object Products : DrawerScreens("Products", "products", R.mipmap.envio/*Icons.Filled.ShoppingCart*/,"")
+    object Products : DrawerScreens("Inventario", "products", R.mipmap.envio/*Icons.Filled.ShoppingCart*/,"")
+    object MoveProducts : DrawerScreens("Mover productos", "moveProducts", R.mipmap.envio/*Icons.Filled.ShoppingCart*/,"")
     object Login : DrawerScreens( "Login", "login", R.mipmap.login, "")
 }
 private val screens = listOf(
     DrawerScreens.Home,
-    DrawerScreens.Account,
+    //DrawerScreens.Account,
     DrawerScreens.Piking,
     DrawerScreens.Products,
+    DrawerScreens.MoveProducts,
     DrawerScreens.Login
+
 )
 
 @Composable

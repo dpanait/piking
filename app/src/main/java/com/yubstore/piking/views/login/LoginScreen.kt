@@ -183,6 +183,10 @@ fun LoginScreen(
                                 //loginData = it
                                 var idcliente = response.idcliente
                                 var status = response.status
+                                /// configuramos datos necesarios del cliente
+                                APP_DATA.IDCLIENTE = idcliente.toString()
+                                APP_DATA.userSku = code1.value.text.uppercase()
+
                                 if(status){
                                     navController.navigate("home/$idcliente")
                                     coroutineScope.cancel("Fin")

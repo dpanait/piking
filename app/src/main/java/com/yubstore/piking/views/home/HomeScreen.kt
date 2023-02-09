@@ -7,26 +7,43 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.produceState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import com.yubstore.piking.data.AppData
+import com.yubstore.piking.model.AppModel
+import com.yubstore.piking.model.LoginModel
 import com.yubstore.piking.service.*
 import com.yubstore.piking.util.TopBar
 import io.ktor.client.call.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun HomeScreen(navController: NavHostController, idcliente: String?, openDrawer: () -> Unit){
+fun HomeScreen(
+    navController: NavHostController,
+    idcliente: String?,
+    openDrawer: () -> Unit
+){
     println("Idcliente: $idcliente")
+    var loginModel = LoginModel()
     val coroutineScope = rememberCoroutineScope()
-
+    val context = LocalContext.current
+    var envi = AppData(context).getEnvi.collectAsState(initial = "")
+    //var environment = envi.getEnvi.collectAsState(initial = "")
+    println("Envi: ${envi.value}")
+    if(envi.value == ""){
+        coroutineScope.launch {
+            AppData(context).saveEnvi("pre")
+        }
+    }
+    var envi2 = AppData(context).getEnvi.collectAsState(initial = "")
+    println("Envi2: ${envi2.value}")
     /*val almacenes = produceState(
         initialValue = PostAlmacen(false , listOf(Almacen("","", ""))),
         producer = {
@@ -70,7 +87,7 @@ fun HomeScreen(navController: NavHostController, idcliente: String?, openDrawer:
         }
     }
     println("getAlmacenes: ${getAlmacenes}")
-    getAlmacenes()
+    //getAlmacenes()
     //println("Almacenes: ${almacenes}")
     //println("Alm: $alm")
     /*println("Almacenes: ${almacenes.value.body}")

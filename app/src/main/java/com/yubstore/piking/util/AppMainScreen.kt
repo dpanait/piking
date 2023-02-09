@@ -18,6 +18,7 @@ import com.yubstore.piking.views.home.HomeScreen
 import com.yubstore.piking.views.login.LoginScreen
 import com.yubstore.piking.views.piking.PikingDetail
 import com.yubstore.piking.views.piking.PikingScreen
+import com.yubstore.piking.views.products.MoveProductsScreen
 import com.yubstore.piking.views.products.ProductsScreen
 
 @Composable
@@ -76,7 +77,7 @@ fun AppMainScreen() {
         ) {
             NavHost(
                 navController = navController,
-                startDestination = DrawerScreens.Home.route//DrawerScreens.Login.route
+                startDestination = DrawerScreens.Home.route//DrawerScreens.Login.route //DrawerScreens.Home.route
             ) {
                 composable(DrawerScreens.Home.route, arguments = listOf(navArgument("idcliente") { type = NavType.StringType })) { backStackEntry ->
                     var idcliente = backStackEntry.arguments?.getString("idcliente")
@@ -122,6 +123,14 @@ fun AppMainScreen() {
                         }
                     )
                 }
+                composable(DrawerScreens.MoveProducts.route) {
+                    MoveProductsScreen(
+                        navController,
+                        openDrawer = {
+                            openDrawer()
+                        }
+                    )
+                }
                 composable(DrawerScreens.Login.route ) {
                     LoginScreen(
                         navController
@@ -148,6 +157,7 @@ fun AppMainScreen() {
                     var product_search = navController.previousBackStackEntry?.savedStateHandle?.get<ProductSearch>("product_search")
                     println("getSavedStateProvider: $product_search")
                     PikingDetail(
+                        navController,
                         idCliente,
                         ordersId,
                         product_search

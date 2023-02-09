@@ -31,7 +31,7 @@ fun TopAppBarOptionMenu(bodyContent: MutableState<String>) {
         }
     }
 
-    DropdownMenu(
+    /*DropdownMenu(
         expanded = expanded.value,
         onDismissRequest = { expanded.value = false },
     ) {
@@ -68,5 +68,5 @@ fun TopAppBarOptionMenu(bodyContent: MutableState<String>) {
         }) {
             Text("Fourth item")
         }
-    }
+    }*/
 }

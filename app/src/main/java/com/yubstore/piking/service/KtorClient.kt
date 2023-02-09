@@ -61,7 +61,7 @@ object KtorClient {
             requestTimeoutMillis = TIME_OUT_MILI
             connectTimeoutMillis = TIME_OUT_MILI
         }
-        install(HttpCache)
+        //install(HttpCache)
 
 
     }//.also { Napier.base(DebugAntilog()) }

@@ -34,7 +34,7 @@ fun PikingScreen(
         Row(
             modifier = Modifier.fillMaxWidth(),
         ){
-            SearchView(state = textState)
+            SearchView(state = textState, Modifier.fillMaxWidth())
         }
 
         Column(
@@ -45,19 +45,12 @@ fun PikingScreen(
 
 
                 PikingList(navController, textState, idCliente)
-                Text(text = "Piking Page content here.")
+                //Text(text = "Piking Page content here.")
 
             /*if(almacenes.value.body.isNotEmpty()){
                 Text(almacenes.value.body[0].toString())
             }*/
         }
-        /*LazyRow {
-            // your code
-        }
-        Row(verticalAlignment = Alignment.Bottom) {
-            Button(onClick = { /*TODO*/ }) {
-                Text("buttom b")
-            }
-        }*/
+
     }
 }

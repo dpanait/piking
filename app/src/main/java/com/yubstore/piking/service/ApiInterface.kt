@@ -14,4 +14,11 @@ interface ApiInterface {
 
     @GET("version.txt")
     fun getVersion(): Call<String>
+
+    @POST("piking_api")
+    fun savePiking(@Body requestModel: SavePiking) : Call<SavePostPiking>
+    @POST("piking_api")
+    fun saveInventory(@Body requestModel: SaveInventory) : Call<ResponsePostInventory>
+    @POST("piking_api")
+    fun saveMoveProducts(@Body requestModel: PostMoveProducts) : Call<ResponsePostMoveProducts>
 }

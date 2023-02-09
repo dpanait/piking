@@ -8,8 +8,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object APP_DATA{
-    val environment = "pro"
+    val environment = "pre"
     var version = ""
+    var userSku = "22G3"
+    var IDCLIENTE = "192"
 }
 
 val urlVersion = "https://yuubbb.com/dev/version"

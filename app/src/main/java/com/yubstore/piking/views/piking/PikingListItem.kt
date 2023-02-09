@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
@@ -19,7 +20,7 @@ import com.yubstore.piking.R
 import com.yubstore.piking.service.Piking
 
 @Composable
-fun OrdersListItem(piking: Piking, onItemClick: (Piking) -> Unit) {
+fun PikingListItem(piking: Piking, onItemClick: (Piking) -> Unit) {
     /*Row(
         modifier = Modifier
             .clickable(onClick = { onItemClick(piking) })
@@ -44,21 +45,36 @@ fun OrdersListItem(piking: Piking, onItemClick: (Piking) -> Unit) {
         ) {
             Text(
                 buildAnnotatedString {
-                    append("Orders_id: ${piking.orders_id}")
+                    append("SKU: ")
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.W900, color = Color(0xFF363533),fontSize = 20.sp)
+                    ) {
+                        append(piking.orders_sku)
+                    }
                 }
+
             )
             Text(
                 buildAnnotatedString {
                     append("Ciudad: ")
                     withStyle(style = SpanStyle(fontWeight = FontWeight.W900, color = Color(0xFF4552B8))
                     ) {
-                        append(piking.city!!)
+                        var city = piking.city
+                        if(piking.city == null){
+                            city  = ""
+                        }
+
+                        append(city!!)
+
                     }
                 }
             )
             Text(
                 buildAnnotatedString {
-                    append("C.Postal: ${piking.postcode!!}")
+                    var postalCode = piking.postcode
+                    if(piking.postcode == null){
+                        postalCode = ""
+                    }
+                    append("C.Postal: $postalCode")
 
                 }
             )
