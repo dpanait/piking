@@ -349,7 +349,7 @@ data class SetInventory(
 )
 @Serializable
 data class ResponsePostInventory(
-    val status: String,
+    val status: Boolean,
     val body: String
 )
 // response piking
@@ -370,7 +370,7 @@ data class SaveInventory(
 data class Inventory(
     val location: String,
     val productsId: String,
-    val quentityProducts: String
+    val quantityProducts: String
 )
 suspend fun postInventory(saveInventory: SaveInventory): HttpResponse {
     var url = URL_API.URL + "piking_api"
@@ -419,4 +419,51 @@ data class ResponsePostMoveProducts(
     val  status: Boolean,
     val body: String
 )
+suspend fun postMoveProducts(saveInventory: PostMoveProducts): HttpResponse {
+    var url = URL_API.URL + "piking_api"
+    if (APP_DATA.environment == "pre") {
+        url = URL_API_TEST.URL + "piking_api"
+    }
+    val response = httpClient.use {
+        it.post(url) {
+            contentType(ContentType.Application.Json)
+            setBody(saveInventory)
+            /*timeout {
+                requestTimeoutMillis = 6000
+            }*/
+        }
 
+    }
+    return response
+}
+// datos para buscar la localizacion multiple
+@Serializable
+data class PostMultiLocation(
+    val action: String,
+    val user_sku: String,
+    val IDCLIENTE: String,
+    val productsId: String
+)
+
+@Serializable
+data class ResponsePostMultiLocation(
+    val  status: Boolean,
+    val body: String
+)
+suspend fun postMultiLocation(saveMultiLocation: PostMultiLocation): HttpResponse {
+    var url = URL_API.URL + "piking_api"
+    if (APP_DATA.environment == "pre") {
+        url = URL_API_TEST.URL + "piking_api"
+    }
+    val response = httpClient.use {
+        it.post(url) {
+            contentType(ContentType.Application.Json)
+            setBody(saveMultiLocation)
+            /*timeout {
+                requestTimeoutMillis = 6000
+            }*/
+        }
+
+    }
+    return response
+}

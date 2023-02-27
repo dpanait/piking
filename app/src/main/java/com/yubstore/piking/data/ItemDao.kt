@@ -1,5 +1,6 @@
 package com.yubstore.piking.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 interface AppDao {
 
     @Query("SELECT * from app ORDER BY environment ASC")
-    fun getItems(): Flow<AppItem>
+    fun getItems(): LiveData<List<AppItem>>
 
     @Query("SELECT * from app WHERE id = :id")
     fun getItem(id: Int): Flow<AppItem>

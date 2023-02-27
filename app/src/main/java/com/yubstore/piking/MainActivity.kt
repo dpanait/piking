@@ -14,7 +14,9 @@ import com.yubstore.piking.model.AppModel
 //import com.yubstore.piking.model.AppModelFactory
 import com.yubstore.piking.ui.theme.PikingTheme
 import com.yubstore.piking.util.AppMainScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+//@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

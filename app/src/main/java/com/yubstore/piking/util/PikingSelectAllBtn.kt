@@ -59,7 +59,7 @@ fun PikingSelectAllBtn(
                 //println("Item checkAll before: $item")
                 item.piking = 1
                 item.status = true
-                item.quantityProcessed = item.products_quantity.split(".")[0].toInt()
+                //item.quantityProcessed = item.products_quantity.split(".")[0].toInt()
                 piking.add(item)
                 //println("Item checkAll: $item")
             }
@@ -92,7 +92,7 @@ fun PikingSelectAllBtn(
 
                 item.piking = 0
                 item.status = false
-                item.quantityProcessed = 0
+                //item.quantityProcessed = 0
                 piking.add(item)
                 //println("Item checkAll: $item")
             }

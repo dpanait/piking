@@ -21,4 +21,6 @@ interface ApiInterface {
     fun saveInventory(@Body requestModel: SaveInventory) : Call<ResponsePostInventory>
     @POST("piking_api")
     fun saveMoveProducts(@Body requestModel: PostMoveProducts) : Call<ResponsePostMoveProducts>
+    @POST("piking_api")
+    fun saveMultiLocation(@Body requestModel: PostMultiLocation) : Call<ResponsePostMultiLocation>
 }

@@ -1,17 +1,18 @@
 package com.yubstore.piking.model
 
 import android.app.Application
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.yubstore.piking.data.*
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class AppModel(application: Application) : ViewModel() {
+class AppModel(application: Application) : AndroidViewModel(application) {//ViewModel()
     private val repository: AppRepository
     var allAppItems: Flow<AppItem>
     var searchResults: Flow<AppItem>
+    var allItems: LiveData<List<AppItem>>
+    var Result: LiveData<List<AppItem>>
     init {
         val appDb = AppItemRoomDatabase.getDatabase(application)
         val appDao = appDb.itemDao()
@@ -20,16 +21,21 @@ class AppModel(application: Application) : ViewModel() {
         repository.findProduct(0)
         allAppItems = repository.allAppItems
         searchResults = repository.searchResults
+        allItems = repository.allItems
+        Result = repository.Result
     }
     //println("allAppItems: ${searchResults}")
     /**
      * Inserts the new Item into database.
      */
-    fun getAppItems(){
-        var appItem = repository.findProduct(0)
+    fun getAppItems(id: Int){
+        var appItem = repository.findProduct(id)
         println("AppItem: $appItem")
 
     }
+    /*fun getAll(): Deferred<Flow<List<AppItem>>> {
+        return repository.findAll()
+    }*/
     fun addNewItem(itemEnvironment: String, itemVersion: String) {
         val newItem = getNewItemEntry(itemEnvironment, itemVersion)
         insertItem(newItem)
@@ -38,7 +44,7 @@ class AppModel(application: Application) : ViewModel() {
     /**
      * Launching a new coroutine to insert an item in a non-blocking way
      */
-    private fun insertItem(item: AppItem) {
+    fun insertItem(item: AppItem) {
         viewModelScope.launch {
             repository.insertItem(item)
         }
@@ -78,14 +84,14 @@ class AppModel(application: Application) : ViewModel() {
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }*/
-/*class AppViewModelFactory(val application: Application) :
+class AppViewModelFactory(val application: Application) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
         if (modelClass.isAssignableFrom(AppModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
             return AppModel(application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
         //return AppModel(application) as T
     }
-}*/
+}

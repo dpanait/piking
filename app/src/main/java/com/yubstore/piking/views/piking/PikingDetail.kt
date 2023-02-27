@@ -12,11 +12,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -24,13 +27,21 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.yubstore.piking.model.PikingModel
 import com.yubstore.piking.service.*
-import com.yubstore.piking.util.SearchView
 import com.yubstore.piking.views.common.CircularIndeterminateProgressBar
 import io.ktor.client.call.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import com.yubstore.piking.util.PikingSelectAllBtn
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class ProductsData (
+    var productsId: String,
+    var quantity: Int
+)
+@Serializable
+data class ProductsHeight (
+    var productsId: String,
+    var height: Float
+)
 @SuppressLint("UnrememberedMutableState", "RememberReturnType")
 @Composable
 fun PikingDetail(
@@ -55,7 +66,7 @@ fun PikingDetail(
     var filteredProducts =  mutableStateListOf<Products>()///mutableStateListOf<Products>()
     val listState = rememberLazyListState()
 
-    val scrollState = rememberScrollState()
+
     //scrollState.scrollTo(scrollState.value - 1000)
     var clickAllBtn = remember { mutableStateOf(false) }
     val bodyContent = remember { mutableStateOf("Select Action") }
@@ -63,6 +74,7 @@ fun PikingDetail(
 
 
     val searchedText = textState.value.text
+
     /*filteredProducts = if (searchedText.isEmpty()) {
         pikingItem
     } else {
@@ -81,7 +93,7 @@ fun PikingDetail(
         println("Size filteres: ${resultList.size} - ${resultList.first().barcode}")
         resultList
     }*/
-    Column() {
+    /*Column() {
         Row(){
             SearchView(state = textState, Modifier.fillMaxWidth(0.9f))
             IconButton(
@@ -92,18 +104,14 @@ fun PikingDetail(
                     isClickedIcon = true
                 }
             ){
-                //if(isClickedIcon){
-                var onClickSelectAll: ()->Unit = {
 
-                }
-                    PikingSelectAllBtn(bodyContent, pikingItem, clickAllBtn, btnSelectClicked)
-                //}
+                PikingSelectAllBtn(bodyContent, pikingItem, clickAllBtn, btnSelectClicked)
             }
         }
-    }
-    println("filteredProducts: ${filteredProducts.size}")
+    }*/
+    //println("filteredProducts: ${filteredProducts.size}")
     // creamos la lista de los productos
-    BuildLazyColumn(
+    /*BuildLazyColumn(
         navController,
         clickAllBtn,
         listState,
@@ -113,6 +121,26 @@ fun PikingDetail(
         pikingModel,
         modificated_values,
         textState
+    )*/
+    var productsDataList = remember {
+        listOf<ProductsData>()
+    }.toMutableList()
+    var productsHeightList = remember {
+        listOf<ProductsHeight>()
+    }.toMutableList()
+
+    ListPiking(
+        navController,
+        clickAllBtn,
+        listState,
+        pikingItem,
+        pikingItemStatus.value,
+        btnSelectClicked.value,
+        pikingModel,
+        modificated_values,
+        textState,
+        productsDataList,
+        productsHeightList
     )
 
 
@@ -133,8 +161,18 @@ fun BuildLazyColumn(
     textState: MutableState<TextFieldValue>
 ){
     var coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
+    //listState.animateScrollToItem(index = 10)
+    var itemIndex = remember {
+        mutableStateOf(0)
+    }
+    var productsDataList = remember {
+        listOf<ProductsData>()
+    }.toMutableList()
 
-
+    var productsHeightList = remember {
+        listOf<ProductsHeight>()
+    }.toMutableList()
 
     LazyColumn(
         modifier = Modifier.padding(0.dp, 60.dp, 0.dp, 0.dp),
@@ -142,91 +180,94 @@ fun BuildLazyColumn(
         state = listState
     ) {
 
-        println("pikingItemStatus: ${pikingItemStatus}")
+        //println("pikingItemStatus: $pikingItemStatus - ${itemList.size}")
         var filteredProducts =  mutableStateListOf<Products>()
         val searchedText = textState.value.text
+
+
         if(pikingItemStatus) {
             item {
                 CircularIndeterminateProgressBar(pikingItemStatus)
             }
         } else {
             // hacemos scroll en la lista dependiendo del botton pulsado
-            if(clickAllBtn.value){
+            /*if(clickAllBtn.value){
                 var indexItem = itemList.size
                 if(btnSelectClicked == "uncheck"){
                     indexItem = 0
                 }
                 coroutineScope.launch {
                     // Animate scroll to the 10th item
-                    //listState.animateScrollToItem(index = indexItem)
+                    listState.animateScrollToItem(index = indexItem)
                 }
-            }
+            }*/
+
             filteredProducts = if (searchedText.isEmpty()) {
                 itemList
             } else {
                 val resultList = mutableStateListOf<Products>()//SnapshotStateList<Products> = SnapshotStateList<Products>()
 
                 itemList.forEachIndexed { index, product ->
-                    println("Check Filter: ${product.barcode?.lowercase()?.contains(searchedText.lowercase())}")
+                    //println("Check Filter: ${product.barcode?.lowercase()?.contains(searchedText.lowercase())}")
                     if (product.barcode?.lowercase()?.contains(searchedText.lowercase()) == true) {
-
+                        itemIndex.value = index
                         product.piking = 1
                         product.status = true
-                        product.quantityProcessed = product.products_quantity.split(".")[0].toInt()
+                        //product.quantityProcessed = product.products_quantity.split(".")[0].toInt()
                         resultList.add(product)
+                        itemList[index].piking = 1
+                        itemList[index].status = true
+                        //itemList[index].quantityProcessed = itemList[index].products_quantity.split(".")[0].toInt()
                     }
                 }
                 //println("Size filteres: ${resultList.size} - ${resultList.first().barcode}")
-                resultList
+                itemList
+                //resultList
             }
-            Log.d("antes", "${filteredProducts.size}")
-            //itemsIndexed(items = itemList){ index, product ->
+
+            //Log.d("antes", "${filteredProducts.size}")
+            //itemsIndexed(items = filteredProducts){ index, product ->
             //this.items(items = itemList, key = { product -> product.products_id}) { product ->
             this.items(filteredProducts){ product->
+                //productsDataList.add(ProductsData(product.products_id, product.products_quantity.split(".")[0].toInt()))
                 //var product by remember{ mutableStateOf(product) }
                 var checklist by remember { mutableStateOf(false)}
                 var maxValue = 0
-                Log.d("Item", "List: add data ${product.piking} Lazy status: ${product.status}")
+                //Log.d("Item", "List: add data ${product.piking} Lazy status: ${product.status}")
                 //var product = itemsList[index]//modificated_values[index]
-                val quantity = product.products_quantity.split(".")[0]
+                //val quantity = product.products_quantity.split(".")[0]
                 var quantityProcessedToShow = product.products_quantity.split(".")[0].toInt() - product.quantityProcessed
-                var quantity_prcesed_server = quantityProcessedToShow
+                //var quantity_prcesed_server = quantityProcessedToShow
 
-                var quantityProcessed = quantityProcessedToShow
-                if(product.quantityProcessed == 0){
+                //var quantityProcessed = quantityProcessedToShow
+                /*if(product.quantityProcessed == 0){
                     maxValue = quantity.toInt()
-                } else {
+                } else {*/
                     maxValue = quantityProcessedToShow
-                }
-
+                //}
 
                 // todas las aciones cuando se hace ckil en el checkbox
                 var onCheckBoxChecked: (Boolean)->Unit = { it->
-                    println("Status: $it - $itemList")
+                    //println("Status: $it - $itemList")
                     checklist = it
                     clickAllBtn.value = false
                     if (it) {
-                        println("quantityProcessedToShow: $quantityProcessedToShow")
-                        println("quantity: $quantity")
-                        println("quantityProcessedToShow: ${quantity_prcesed_server + maxValue} $quantity_prcesed_server  $maxValue")
-                        if(quantityProcessedToShow != 0 && quantity.toInt() == (maxValue)){
-                            println("PIKING1: ${quantity.toInt() == (quantity_prcesed_server + maxValue)}")
+
+                        if(maxValue != 0){
+                            //println("PIKING1: ${quantity.toInt() == (quantity_prcesed_server + maxValue)}")
                             modificated_values.find { pro -> pro.products_id == product.products_id }?.piking = 1
                             itemList.find { pro -> pro.products_id == product.products_id }?.piking = 1
-
-                            itemList.find{pro -> pro.products_id == product.products_id}?.quantityProcessed = quantity.toInt()
                             itemList.find { pro -> pro.products_id == product.products_id }?.status = true
-                            //modificated_values.find { pro -> pro.products_id == product.products_id }?.quantityProcessed = quantityProcessed.toInt()
-                            //quantity_prcesed_server = itemList[index].quantityProcessed
+
                         }
                     } else {
                         modificated_values.find { pro -> pro.products_id == product.products_id }?.piking = 0
                         itemList.find { pro -> pro.products_id == product.products_id }?.piking = 0
                         itemList.find { pro -> pro.products_id == product.products_id }?.status = false
-                        itemList.find{pro -> pro.products_id == product.products_id}?.quantityProcessed = 0
+
                     }
                 }
-                println("ClickAll btn: ${clickAllBtn.value}")
+                //println("ClickAll btn: ${clickAllBtn.value}")
 
                 // si hemos echo click en los botones selectar todos o deselect
 
@@ -235,29 +276,66 @@ fun BuildLazyColumn(
                     if(product.piking == 1){
                         checklist = true
                     }
+                    //Log.d("Bunton text", "Button: $btnSelectClicked")
+                    // cuando hacemos check o uncheck movemos el scrool a la ultima fila o al principio dependiendo del caso
+                    if(btnSelectClicked == "check"){
+                        itemIndex.value = filteredProducts.size
+                    }
+                    if(btnSelectClicked == "uncheck"){
+                        itemIndex.value = 0
+                    }
 
+                } else {
+                    //checklist = product.status
                 }
 
-                println("Status remember: $checklist - $product")
+                //println("Status remember: $checklist - $product")
                 // generamos cada linea de producto en esta orders
                 ProductsDisplay(
                     item = product,
                     iconStatus = checklist,
-                    itemsList = itemList,
+                    itemsList = filteredProducts,
                     onCheckBoxChecked = onCheckBoxChecked,
-                    modificated_values = modificated_values
+                    modificated_values = modificated_values,
+                    productsDataList = productsDataList,
+                    productsHeightList = productsHeightList
                 )
 
+
+            }
+            coroutineScope.launch {
+
+                listState.scrollToItem(itemIndex.value,0)
             }
             item {
                 Button(onClick = {
                     //println("Guardar: $itemsList")
                     var pikingList = arrayListOf<Products>()
-                    itemList.forEachIndexed { index, item ->
+                    filteredProducts.forEachIndexed { index, item ->
                         println("Guardar item_$index: $item")
+                        val productsQuantity = item.products_quantity.split(".")[0].toInt() - item.quantityProcessed
+                        //println("productsQuantity: $productsQuantity")
+                        var productsDataStatus =  productsDataList.find { pro -> pro.productsId == item.products_id }
+                        if(productsDataStatus == null){
+                            if(item.status){
+                                item.quantityProcessed = productsQuantity
+                            } else {
+                                item.quantityProcessed = 0
+                            }
+                        } else {
+                            if(item.status) {
+                                item.quantityProcessed = productsDataStatus.quantity
+                            } else {
+                                item.quantityProcessed = 0
+                            }
+                        }
+                        //item.quantityProcessed = productsQuantity - item.quantityProcessed.toInt()
                         pikingList.add(item)
+                        Log.w("Item", "${pikingList[index]}")
+                        var productChange = productsDataList.find { pro -> pro.productsId == item.products_id }
+                        Log.e("Products change", "${productChange}")
                     }
-                    pikingModel.savePiking(pikingList)
+                    //pikingModel.savePiking(pikingList)
                     //navController.popBackStack()
 
                 }) {
@@ -277,10 +355,12 @@ fun ProductsDisplay(
     iconStatus: Boolean,
     itemsList: SnapshotStateList<Products>,
     onCheckBoxChecked: (Boolean) -> Unit,
-    modificated_values: SnapshotStateList<Products>
+    modificated_values: SnapshotStateList<Products>,
+    productsDataList: MutableList<ProductsData>,
+    productsHeightList: MutableList<ProductsHeight>
 
 ){
-    println("Product: $item - Icon Status: $iconStatus")
+    //println("Product: $item - Icon Status: $iconStatus")
     var checkboxState = rememberSaveable { mutableStateOf(false) }
     var quantityProcessedToShow = item.products_quantity.split(".")[0].toInt() - item.quantityProcessed
     var piking by rememberSaveable { mutableStateOf(item.piking) }
@@ -299,20 +379,34 @@ fun ProductsDisplay(
 
     val quantity = products_quantity.split(".")[0]
     // maximo que se puede poner en el input de las cantidades
-    var quantity_prcesed_server = quantityProcessedToShow
+    //var quantity_prcesed_server = quantityProcessedToShow
     var maxValue = 0
     if(item.quantityProcessed == 0){
         maxValue = quantity.toInt()
     } else {
         maxValue = quantityProcessedToShow
     }
+    checkboxState.value = piking == 1
+    var height by remember {
+        mutableStateOf(0f)
+    }
+    val localDensity = LocalDensity.current
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(15.dp)
+            //.height(300.dp)
+            .onGloballyPositioned { coordinates ->
+                height = coordinates.size.height.toFloat()
+                productsHeightList.add(ProductsHeight(products_id, coordinates.size.height.toFloat()))
+                // Set column height using the LayoutCoordinates
+                // columnHeightPx = coordinates.size.height.toFloat()
+                // columnHeightDp = with(localDensity) { coordinates.size.height.toDp() }
+            }
         ,
-        elevation = 10.dp
+        elevation = 10.dp,
+
     ) {
         Column(
             modifier = Modifier.padding(10.dp, 15.dp)
@@ -371,18 +465,19 @@ fun ProductsDisplay(
                     placeholder = { Text("UD")},
                     value = quantityProcessed,
                     onValueChange = { it->
-                        println("it: $it")
-                        val number = it.filter { it.isDigit() }
-                        println("Number: $number")
+                        //println("it: $it")
+                        var number = it.filter { it.isDigit() }
+                        //println("Number: $number")
                         var it_value = it
                         /*if(it == ""){
                             it_value = ""
                         }*/
                         isError = false
 
-                        println("quantity: $quantity, restantes: $quantityProcessedToShow - server: ${item.quantityProcessed}")
-                        println("max value: $maxValue, $it")
+                        /*println("quantity: $quantity, restantes: $quantityProcessedToShow - server: ${item.quantityProcessed}")*/
+                        //println("Numero teclado: $number,max value: $maxValue, quantityProcessed: $quantityProcessedToShow")
                         if(number != "" && number.toInt() > maxValue){
+                            number = 0.toString()
                             isError = true
                         }
                         quantityProcessed = number//manageLength(it_value, maxValue.toString().length)
@@ -390,8 +485,19 @@ fun ProductsDisplay(
                         if(quantityProcessed != "" && quantityProcessedToShow != 0) {
                             modificated_values.find { pro -> pro.products_id == products_id }?.quantityProcessed =
                                 number.toInt()
-                            itemsList.find { pro -> pro.products_id == products_id }?.quantityProcessed =
-                                number.toInt()
+                            //itemsList.find { pro -> pro.products_id == products_id }?.quantityProcessed =
+                                //number.toInt()
+
+                            var productDataStatus = productsDataList.find { pro -> pro.productsId == products_id }
+                            //Log.e("productDataStatus:", "${productDataStatus}")
+                            if(productDataStatus != null) {
+                                productsDataList.find { pro -> pro.productsId == products_id }?.quantity = number.toInt()
+                            } else {
+                                productsDataList.add(ProductsData(products_id, number.toInt()))
+                            }
+
+                            //var productChange = productsDataList.find { pro -> pro.productsId == products_id }
+                            //Log.e("Products change teclado", "${productChange}")
 
                         }
                     },
@@ -423,8 +529,7 @@ fun ProductsDisplay(
             ){
                 Checkbox(
                     checked = iconStatus,
-                    onCheckedChange = onCheckBoxChecked,
-                    //enabled = true
+                    onCheckedChange = onCheckBoxChecked
                 )
             }
         }
@@ -436,81 +541,3 @@ fun ProductsDisplay(
 
 private fun manageLength(input: String, maxLength: Int): String = if (input.length > maxLength ) input.substring(0,maxLength) else input
 
-
-fun savePiking(
-    coroutineScope: CoroutineScope,
-    pikingList: ArrayList<Products>
-){
-    coroutineScope.launch {
-
-        //println("pikingItemStatus: ${pikingItemStatus.value}")
-        val savePostPiking = SavePiking("save_piking", APP_DATA.userSku, APP_DATA.IDCLIENTE, pikingList)
-        kotlin.runCatching {
-            savePiking(savePostPiking)//ArrayList<String>()
-            //Test(SetPiking(idCliente, "get_picking"))
-
-        }.onSuccess {
-            println("itModel: ${it}")
-            val response = it.body<SavePostPiking>()//it.body<PostProducts>()
-            println("PikingItemModel: $response")
-            //postOrders = it
-            //println("PostOrders: $postOrders")
-
-            /* _pikingItem.clear()
-             _pikingItem.addAll(response.body)
-             pikingItemStatus.value = false
-             println("pikingItemStatus: ${pikingItemStatus.value}")*/
-
-            //viewModelScope.cancel()
-
-        }.onFailure {
-            println("Error: ${it.stackTraceToString()} - ${it.stackTrace} -${it.message}")
-            //viewModelScope.cancel()
-        }
-    }
-
-}
-
-fun getPikingItem(
-    coroutineScope: CoroutineScope,
-    idCliente: String,
-    ordersId: String,
-    cajasId: String,
-    pikingItem: SnapshotStateList<Products>,
-    pikingItemStatus: MutableState<Boolean>
-){
-
-    coroutineScope.launch {
-
-        kotlin.runCatching {
-            postProducts(SetProduct(idCliente, ordersId, cajasId,"products"))//ArrayList<String>()
-            //Test(SetPiking(idCliente, "get_picking"))
-
-        }.onSuccess {
-            //println("itModel: ${it.bodyAsText()}")
-            val response = it.body<PostProducts>()
-            println("PikingItemModel: $response")
-            //postOrders = it
-            //println("PostOrders: $postOrders")
-
-            //pikingItem.clear()
-            //pikingItem.addAll(response.body)
-            pikingItem.addAll(response.body!!)
-
-            pikingItemStatus.value = false
-
-            coroutineScope.cancel()
-        }.onFailure {
-            println("Error: $it")
-            coroutineScope.cancel()
-        }
-    }
-}
-
-
-/*@Preview
-@Composable
-fun PreviewPikingDetail() {
-    PikingDetail(navController,"192", "2263162", ProductSearch("192", "2263162", "294"))
-}
-*/

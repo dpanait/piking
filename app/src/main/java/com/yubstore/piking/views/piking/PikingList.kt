@@ -54,11 +54,11 @@ fun PikingList(
                 orders
             } else {
                 val resultList: SnapshotStateList<Piking> = SnapshotStateList<Piking>()
-                println()
+
                 for (order in orders) {
-                    if (order.city?.lowercase() != null && order.city?.lowercase().contains(searchedText.lowercase())) {
+                    if (order.city?.lowercase() != null && order.city!!.lowercase().contains(searchedText.lowercase())) {
                         resultList.addAll(listOf(order))
-                    } else if(order.orders_sku?.lowercase().contains(searchedText.lowercase())){
+                    } else if(order.orders_sku!!.lowercase().contains(searchedText.lowercase())){
                         resultList.addAll(listOf(order))
                     }
                 }

@@ -212,7 +212,7 @@ class PikingModel: ViewModel() {
             //item.piking = 1
             println("Piking item: ${item.piking}")
         }
-        /*val savePostPiking = SavePiking("save_piking", APP_DATA.userSku, APP_DATA.IDCLIENTE, items)
+        val savePostPiking = SavePiking("save_piking", APP_DATA.userSku, APP_DATA.IDCLIENTE, items)
         val response = ServiceBuilder.buildService(ApiInterface::class.java)
         response.savePiking(savePostPiking).enqueue(
             object : Callback<SavePostPiking> {
@@ -234,7 +234,7 @@ class PikingModel: ViewModel() {
                 }
 
             }
-        )*/
+        )
 
         /*viewModelScope.launch {
 
