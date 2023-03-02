@@ -1,18 +1,24 @@
 package com.yubstore.piking.views.home
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.toSize
 import androidx.navigation.NavHostController
 import com.yubstore.piking.data.AppData
+import com.yubstore.piking.model.AlmacenModel
 import com.yubstore.piking.model.AppModel
 import com.yubstore.piking.model.LoginModel
 import com.yubstore.piking.service.*
@@ -28,6 +34,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     navController: NavHostController,
     idcliente: String?,
+    almacenModel: AlmacenModel,
     openDrawer: () -> Unit
 ){
     println("Idcliente: $idcliente")
@@ -44,65 +51,43 @@ fun HomeScreen(
     }
     var envi2 = AppData(context).getEnvi.collectAsState(initial = "")
     println("Envi2: ${envi2.value}")
-    /*val almacenes = produceState(
-        initialValue = PostAlmacen(false , listOf(Almacen("","", ""))),
-        producer = {
-            value = postAlmacen(SetAlmacen("1", "almacen"))
-        }
-    )*/
-    /*var alm = remember {
-        PostAlmacen(false , listOf(Almacen("","", "")))
-    }
-    coroutineScope.launch {
-        try {
-            alm = postAlmacen(SetAlmacen(idcliente, "almacen"))
-        } catch (e: Exception) {
-            // handle exception
-            println("Error: $e")
-        } finally {
-            //someState.endProgress()
-        }
-
-    }*/
-    val getAlmacenes: () -> Unit = {
-        //var alm = PostAlmacen(false , listOf(Almacen("","", "")))
-        //println("ALM fun: $alm")
-        coroutineScope.launch {
-            println("Id: $idcliente")
-
-            kotlin.runCatching {
-                postAlmacen(SetAlmacen(idcliente, "almacen"))
-
-            }.onSuccess {
-                val response = it.body<PostAlmacen>()
-                println("Almacen: $response")
-                println("almacen response: ${it.bodyAsText()}")
-                //alm = it
-
-                println("size: ${it}")
-                coroutineScope.cancel()
-            }.onFailure {
-                println("Error: $it")
-            }
-        }
-    }
-    println("getAlmacenes: ${getAlmacenes}")
-    //getAlmacenes()
-    //println("Almacenes: ${almacenes}")
-    //println("Alm: $alm")
-    /*println("Almacenes: ${almacenes.value.body}")
-    println("Al: $alm")*/
-    /*val vm by remember { mutableStateOf(LoginModel()) }
-
-    var alma = vm.almacen()*/
-    /*var almModel = LoginModel()
-    var al = almModel.almacen()
-    //var alma = LoginModel().almacen()
-    println("Alma: $al")*/
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
             title = "Home",
             buttonIcon = Icons.Filled.Menu,
+            almacenModel = almacenModel,
+            onButtonClicked = { openDrawer() }
+        )
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Inicio")
+        }
+    }
+
+}
+
+
+/*
+var mExpanded by remember { mutableStateOf(false) }
+    // Create a string value to store the selected city
+    var mSelectedText by remember { mutableStateOf("") }
+
+    var mTextFieldSize by remember { mutableStateOf(Size.Zero)}
+
+    // Up Icon when expanded and down icon when collapsed
+    val icon = if (mExpanded)
+        Icons.Filled.KeyboardArrowUp
+    else
+        Icons.Filled.KeyboardArrowDown
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        TopBar(
+            title = "Home",
+            buttonIcon = Icons.Filled.Menu,
+            almacenModel = almacenModel,
             onButtonClicked = { openDrawer() }
         )
         Column(
@@ -110,9 +95,42 @@ fun HomeScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
             Text(text = "Home Page content here.")
-            /*if(almacenes.value.body.isNotEmpty()){
-                Text(almacenes.value.body[0].toString())
-            }*/
+
+            OutlinedTextField(
+                value = mSelectedText,
+                onValueChange = { mSelectedText = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onGloballyPositioned { coordinates ->
+                        // This value is used to assign to
+                        // the DropDown the same width
+                        mTextFieldSize = coordinates.size.toSize()
+                    },
+                label = {Text("Almacen")},
+                trailingIcon = {
+                    Icon(icon,"contentDescription",
+                        Modifier.clickable { mExpanded = !mExpanded })
+                }
+            )
+
+            // Create a drop-down menu with list of cities,
+            // when clicked, set the Text Field text as the city selected
+            DropdownMenu(
+                expanded = mExpanded,
+                onDismissRequest = { mExpanded = false },
+                modifier = Modifier
+                    .width(with(LocalDensity.current){mTextFieldSize.width.toDp()})
+            ) {
+                almacenes.forEach { almacen ->
+                    DropdownMenuItem(onClick = {
+                        mSelectedText = almacen.cajas_name
+                        mExpanded = false
+                    }) {
+                        Text(text = almacen.cajas_name)
+                    }
+                }
+            }
+
         }
     }
-}
+*/

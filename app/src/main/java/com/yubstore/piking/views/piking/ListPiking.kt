@@ -163,7 +163,7 @@ fun ListPiking(
 
                         }
                     }
-                    println("ClickAll btn: ${clickAllBtn.value}")
+                    //println("ClickAll btn: ${clickAllBtn.value}")
 
                     // si hemos echo click en los botones selectar todos o deselect
 
@@ -185,7 +185,7 @@ fun ListPiking(
                         checklist = product.status
                     }
 
-                    println("Status remember: $checklist - $product")
+                    //println("Status remember: $checklist - $product")
                     //println("Scroll Value: ${itemIndex.value}")
 
                     // generamos cada linea de producto en esta orders
@@ -212,7 +212,7 @@ fun ListPiking(
                         //println("Guardar: $itemsList")
                         var pikingList = arrayListOf<Products>()
                         filteredProducts.forEachIndexed { index, item ->
-                            println("Guardar item_$index: $item")
+                            //println("Guardar item_$index: $item")
                             val productsQuantity =
                                 item.products_quantity.split(".")[0].toInt() - item.quantityProcessed
                             //println("productsQuantity: $productsQuantity")
@@ -233,10 +233,10 @@ fun ListPiking(
                             }
                             //item.quantityProcessed = productsQuantity - item.quantityProcessed.toInt()
                             pikingList.add(item)
-                            Log.w("Item", "${pikingList[index]}")
+                            //Log.w("Item", "${pikingList[index]}")
                             var productChange =
                                 productsDataList.find { pro -> pro.productsId == item.products_id }
-                            Log.e("Products change", "${productChange}")
+                            //Log.e("Products change", "${productChange}")
                         }
                         //pikingModel.savePiking(pikingList)
                         //navController.popBackStack()
@@ -248,14 +248,14 @@ fun ListPiking(
                 }
 
             }
-            println("Scroll Value: $itemIndex")
+            //println("Scroll Value: $itemIndex")
             coroutineScope.launch {
                 scrollState.scrollTo(itemIndex)
             }
         }
-        productsHeightList.forEach { item ->
+        /*productsHeightList.forEach { item ->
             Log.e("Element height", "${item.productsId} -  ${item.height}")
-        }
+        }*/
 
 
 

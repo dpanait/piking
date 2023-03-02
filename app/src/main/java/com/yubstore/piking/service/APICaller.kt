@@ -442,13 +442,14 @@ data class PostMultiLocation(
     val action: String,
     val user_sku: String,
     val IDCLIENTE: String,
+    val cajasId: String,
     val productsId: String
 )
 
 @Serializable
 data class ResponsePostMultiLocation(
     val  status: Boolean,
-    val body: String
+    val body: ArrayList<Inventory>
 )
 suspend fun postMultiLocation(saveMultiLocation: PostMultiLocation): HttpResponse {
     var url = URL_API.URL + "piking_api"

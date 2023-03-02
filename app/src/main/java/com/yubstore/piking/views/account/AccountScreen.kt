@@ -10,14 +10,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import com.yubstore.piking.model.AlmacenModel
 import com.yubstore.piking.util.TopBar
 
 @Composable
-fun AccountScreen(navController: NavHostController, openDrawer: () -> Unit){
+fun AccountScreen(
+    navController: NavHostController,
+    almacenModel: AlmacenModel,
+    openDrawer: () -> Unit
+){
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
             title = "Account",
             buttonIcon = Icons.Filled.Menu,
+            almacenModel = almacenModel,
             onButtonClicked = { openDrawer() }
         )
         Column(

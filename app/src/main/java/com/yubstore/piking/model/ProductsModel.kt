@@ -4,7 +4,10 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,6 +22,11 @@ import retrofit2.Response
 class ProductsModel: ViewModel() {
 
     val moveProductsStatus = mutableStateOf(false)
+    var _multiLocation = mutableStateListOf<Inventory>()
+    val multiLocation: SnapshotStateList<Inventory>
+        get() = _multiLocation
+
+    var locationListStatus = mutableStateOf(true)
 
     fun saveInventory(item: Inventory, context: Context){
         val savePostInventory = SaveInventory("save_inventory", APP_DATA.userSku, APP_DATA.IDCLIENTE, item)
@@ -140,8 +148,14 @@ class ProductsModel: ViewModel() {
     }
 
     fun checkMultiLocation(productsId: String, context: Context) {
+        println("CajasID: ${APP_DATA.cajasId}")
+        //return
 
-        val postMultiLocation = PostMultiLocation("check_multi_location", APP_DATA.userSku, APP_DATA.IDCLIENTE, productsId)
+        if(APP_DATA.cajasId.isEmpty()){
+            Toast.makeText(context,"No se puede procesar peticion, no tienes configurado el Almacen", Toast.LENGTH_LONG).show()
+            return
+        }
+        val postMultiLocation = PostMultiLocation("check_multi_location", APP_DATA.userSku, APP_DATA.IDCLIENTE, APP_DATA.cajasId, productsId)
         val response = ServiceBuilder.buildService(ApiInterface::class.java)
         response.saveMultiLocation(postMultiLocation).enqueue(
             object : Callback<ResponsePostMultiLocation> {
@@ -152,8 +166,24 @@ class ProductsModel: ViewModel() {
                     //Toast.makeText(this@MainActivity,response.message().toString(),Toast.LENGTH_LONG).show()
                     var saveMultiLocation = response.body()
                     if(saveMultiLocation!!.status){
-                        moveProductsStatus.value = true
-                        Toast.makeText(context,"Este producto: $productsId tien varias localizaciónes", Toast.LENGTH_LONG).show()
+                        _multiLocation.addAll(saveMultiLocation.body)
+                        if(saveMultiLocation.body.size > 1) {
+                            Toast.makeText(
+                                context,
+                                "Este producto: $productsId tien varias localizaciónes",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            locationListStatus.value = false
+                        }
+
+                    } else {
+                        if(saveMultiLocation.body.isEmpty()){
+                            Toast.makeText(
+                                context,
+                                "Este producto: $productsId no se encuentra en este almacen",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
 
 

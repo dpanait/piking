@@ -23,4 +23,6 @@ interface ApiInterface {
     fun saveMoveProducts(@Body requestModel: PostMoveProducts) : Call<ResponsePostMoveProducts>
     @POST("piking_api")
     fun saveMultiLocation(@Body requestModel: PostMultiLocation) : Call<ResponsePostMultiLocation>
+    @POST("piking_api")
+    fun postAlmacen(@Body requestModel: SetAlmacen) : Call<PostAlmacen>
 }

@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavHostController
+import com.yubstore.piking.model.AlmacenModel
 import com.yubstore.piking.util.SearchView
 import com.yubstore.piking.util.TopBar
 import com.yubstore.piking.views.common.LoadingAnimation
@@ -21,6 +22,7 @@ import com.yubstore.piking.views.common.LoadingAnimation
 fun PikingScreen(
     navController: NavHostController,
     idCliente: String?,
+    almacenModel: AlmacenModel,
     openDrawer: () -> Unit
 ) {
     //val image_almacen: Painter = painterResource(id = R.mipmap.ic_products)
@@ -29,6 +31,7 @@ fun PikingScreen(
         TopBar(
             title = "Piking",
             buttonIcon = Icons.Rounded.Menu,
+            almacenModel = almacenModel,
             onButtonClicked = { openDrawer() }
         )
         Row(

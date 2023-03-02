@@ -21,17 +21,7 @@ import com.yubstore.piking.service.Piking
 
 @Composable
 fun PikingListItem(piking: Piking, onItemClick: (Piking) -> Unit) {
-    /*Row(
-        modifier = Modifier
-            .clickable(onClick = { onItemClick(piking) })
-            .background(colorResource(id = R.color.searchBarBackground))
-            .height(57.dp)
-            .fillMaxWidth()
-            .padding(PaddingValues(8.dp, 16.dp))
-    ) {
-        Text(text = piking.city!!, fontSize = 18.sp, color = Color.White)
-        Text(text = piking.orders_id, fontSize = 18.sp, color = Color.White)
-    }*/
+
     Card(
         modifier = Modifier
             .fillMaxWidth()

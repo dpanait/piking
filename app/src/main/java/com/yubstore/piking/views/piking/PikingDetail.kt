@@ -75,40 +75,7 @@ fun PikingDetail(
 
     val searchedText = textState.value.text
 
-    /*filteredProducts = if (searchedText.isEmpty()) {
-        pikingItem
-    } else {
-        val resultList = mutableStateListOf<Products>()//SnapshotStateList<Products> = SnapshotStateList<Products>()
 
-        pikingItem.forEachIndexed { index, product ->
-            println("Check Filter: ${product.barcode?.lowercase()?.contains(searchedText.lowercase())}")
-            if (product.barcode?.lowercase()?.contains(searchedText.lowercase()) == true) {
-
-                product.piking = 1
-                product.status = true
-                product.quantityProcessed = product.products_quantity.split(".")[0].toInt()
-                resultList.add(product)
-            }
-        }
-        println("Size filteres: ${resultList.size} - ${resultList.first().barcode}")
-        resultList
-    }*/
-    /*Column() {
-        Row(){
-            SearchView(state = textState, Modifier.fillMaxWidth(0.9f))
-            IconButton(
-                modifier = Modifier
-                    .size(60.dp),
-
-                onClick = {
-                    isClickedIcon = true
-                }
-            ){
-
-                PikingSelectAllBtn(bodyContent, pikingItem, clickAllBtn, btnSelectClicked)
-            }
-        }
-    }*/
     //println("filteredProducts: ${filteredProducts.size}")
     // creamos la lista de los productos
     /*BuildLazyColumn(
@@ -147,7 +114,7 @@ fun PikingDetail(
 
 }
 
-@SuppressLint("CoroutineCreationDuringComposition")
+/*@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun BuildLazyColumn(
     navController: NavController,
@@ -346,7 +313,7 @@ fun BuildLazyColumn(
             }
         }
     }
-}
+}*/
 
 
 @Composable

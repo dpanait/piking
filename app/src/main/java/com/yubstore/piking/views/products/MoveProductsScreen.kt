@@ -25,6 +25,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import com.yubstore.piking.model.AlmacenModel
 import com.yubstore.piking.model.ProductsModel
 import com.yubstore.piking.service.MoveProducts
 
@@ -33,6 +34,7 @@ import com.yubstore.piking.service.MoveProducts
 @Composable
 fun MoveProductsScreen(
     navController: NavHostController,
+    almacenModel: AlmacenModel,
     openDrawer: () -> Unit
 ){
     val productsModel =  ProductsModel()
@@ -53,6 +55,7 @@ fun MoveProductsScreen(
         TopBar(
             title = "Mover Productos",
             buttonIcon = Icons.Rounded.Menu,
+            almacenModel = almacenModel,
             onButtonClicked = { openDrawer() }
         )
         Column(

@@ -1,5 +1,6 @@
 package com.yubstore.piking.util
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -12,19 +13,26 @@ import androidx.navigation.compose.composable
 import kotlinx.coroutines.launch
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.yubstore.piking.model.AlmacenModel
+import com.yubstore.piking.model.ProductsModel
 import com.yubstore.piking.service.ProductSearch
 import com.yubstore.piking.views.account.AccountScreen
 import com.yubstore.piking.views.home.HomeScreen
 import com.yubstore.piking.views.login.LoginScreen
 import com.yubstore.piking.views.piking.PikingDetail
 import com.yubstore.piking.views.piking.PikingScreen
+import com.yubstore.piking.views.products.LocationItemDetails
+import com.yubstore.piking.views.products.LocationsItems
 import com.yubstore.piking.views.products.MoveProductsScreen
 import com.yubstore.piking.views.products.ProductsScreen
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun AppMainScreen() {
     val navController = rememberNavController()
     val currentScreen = remember { mutableStateOf(DrawerScreens.Home.route) }
+    var productsModel = ProductsModel()
+    var almacenModel = AlmacenModel()
 
     Surface(color = MaterialTheme.colors.background) {
         val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -84,6 +92,7 @@ fun AppMainScreen() {
                     HomeScreen(
                         navController,
                         idcliente,
+                        almacenModel,
                         openDrawer = {
                             openDrawer()
                         }
@@ -92,6 +101,7 @@ fun AppMainScreen() {
                 composable(DrawerScreens.Account.route) {
                     AccountScreen(
                         navController,
+                        almacenModel,
                         openDrawer = {
                             openDrawer()
                         }
@@ -110,22 +120,30 @@ fun AppMainScreen() {
                     PikingScreen(
                         navController,
                         idcliente,
+                        almacenModel,
                         openDrawer = {
                             openDrawer()
                         }
                     )
                 }
                 composable(DrawerScreens.Products.route) {
-                    ProductsScreen(
-                        navController,
-                        openDrawer = {
-                            openDrawer()
-                        }
-                    )
+                    var productSearch = navController.previousBackStackEntry?.savedStateHandle?.get<ProductSearch>("product_search")
+
+                        ProductsScreen(
+                            navController,
+                            productsModel,
+                            almacenModel,
+                            openDrawer = {
+                                openDrawer()
+                            },
+                            productSearch
+                        )
+
                 }
                 composable(DrawerScreens.MoveProducts.route) {
                     MoveProductsScreen(
                         navController,
+                        almacenModel,
                         openDrawer = {
                             openDrawer()
                         }
@@ -135,6 +153,31 @@ fun AppMainScreen() {
                     LoginScreen(
                         navController
                     )
+                }
+                composable("multiLocation/{productsId}", arguments = listOf(navArgument("productsId") { type = NavType.StringType })){backStackEntry->
+                    var productsId = backStackEntry.arguments?.getString("productsId")
+                    LocationsItems(navController, productsId, productsModel)
+                }
+                composable(
+                    "location/{location}/{productsId}/{quantity}",
+                    arguments = listOf(
+                        navArgument("location") { type = NavType.StringType },
+                        navArgument("productsId") { type = NavType.StringType },
+                        navArgument("quantity") { type = NavType.StringType }
+                    )){backStackEntry->
+                    var location = backStackEntry.arguments?.getString("location")
+                    var productsId = backStackEntry.arguments?.getString("productsId")
+                    var quantity = backStackEntry.arguments?.getString("quantity")
+                    if (location != null && productsId != null && quantity != null) {
+                            LocationItemDetails(
+                                location,
+                                productsId,
+                                quantity.toInt(),
+                                openDrawer = {
+                                    openDrawer()
+                                }
+                            )
+                    }
                 }
                 composable(
                     "products/{idCliente}/{ordersId}",

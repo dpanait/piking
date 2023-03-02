@@ -12,6 +12,8 @@ object APP_DATA{
     var version = ""
     var userSku = "22G3"
     var IDCLIENTE = "192"
+    var cajasId = ""
+    var storeName = ""
 }
 
 val urlVersion = "https://yuubbb.com/dev/version"
