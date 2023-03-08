@@ -27,6 +27,7 @@ class ProductsModel: ViewModel() {
         get() = _multiLocation
 
     var locationListStatus = mutableStateOf(true)
+    var loadingIconStatus = mutableStateOf(false)
 
     fun saveInventory(item: Inventory, context: Context){
         val savePostInventory = SaveInventory("save_inventory", APP_DATA.userSku, APP_DATA.IDCLIENTE, item)
@@ -166,6 +167,7 @@ class ProductsModel: ViewModel() {
                     //Toast.makeText(this@MainActivity,response.message().toString(),Toast.LENGTH_LONG).show()
                     var saveMultiLocation = response.body()
                     if(saveMultiLocation!!.status){
+                        _multiLocation.clear()
                         _multiLocation.addAll(saveMultiLocation.body)
                         if(saveMultiLocation.body.size > 1) {
                             Toast.makeText(
@@ -175,6 +177,9 @@ class ProductsModel: ViewModel() {
                             ).show()
                             locationListStatus.value = false
                         }
+                        if(saveMultiLocation.body.size == 1){
+                            loadingIconStatus.value = true
+                        }
 
                     } else {
                         if(saveMultiLocation.body.isEmpty()){
@@ -183,6 +188,7 @@ class ProductsModel: ViewModel() {
                                 "Este producto: $productsId no se encuentra en este almacen",
                                 Toast.LENGTH_LONG
                             ).show()
+
                         }
                     }
 

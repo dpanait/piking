@@ -52,12 +52,12 @@ fun TopAppBarOptionMenu(
             DropdownMenuItem(onClick = {
                 //mSelectedText = almacen.cajas_name
                 println("Selected: ${almacen.cajas_name}")
-                bodyContent.value = almacen.cajas_name
+                bodyContent.value = "${almacen.cajas_name} - ${almacen.cajas_id}"
                 expanded.value = false
                 APP_DATA.cajasId = almacen.cajas_id
-                APP_DATA.storeName = almacen.cajas_name
+                APP_DATA.storeName = "${almacen.cajas_name} - ${almacen.cajas_id}"
             }) {
-                Text(text = almacen.cajas_name)
+                Text(text = "${almacen.cajas_name} - ${almacen.cajas_id}")
             }
         }
     }

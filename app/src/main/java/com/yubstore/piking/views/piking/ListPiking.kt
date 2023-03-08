@@ -13,7 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -119,16 +118,16 @@ fun ListPiking(
                 }
                 itemIndex = scroll
                 //println("Size filteres: ${resultList.size} - ${resultList.first().barcode}")
-                println("Scrool: $itemIndex")
+                //println("Scrool: $itemIndex")
                 pikingItem
                 //resultList
             }
-            filteredProducts.forEachIndexed { index, product ->
+            /*filteredProducts.forEachIndexed { index, product ->
                 Log.e("Num products", "${productsHeightList.size} - $product")
-            }
+            }*/
             if (pikingItemStatus) {
 
-                CircularIndeterminateProgressBar(pikingItemStatus)
+                CircularIndeterminateProgressBar(pikingItemStatus, null)
 
             } else {
 
@@ -151,7 +150,7 @@ fun ListPiking(
                                     1
                                 pikingItem.find { pro -> pro.products_id == product.products_id }?.status =
                                     true
-                                Log.e("SCROOL val: ", "${scrollState.value}")
+                                //Log.e("SCROOL val: ", "${scrollState.value}")
                             }
                         } else {
                             modificated_values.find { pro -> pro.products_id == product.products_id }?.piking =
@@ -233,7 +232,7 @@ fun ListPiking(
                             }
                             //item.quantityProcessed = productsQuantity - item.quantityProcessed.toInt()
                             pikingList.add(item)
-                            //Log.w("Item", "${pikingList[index]}")
+                            Log.w("Item", "${pikingList[index]}")
                             var productChange =
                                 productsDataList.find { pro -> pro.productsId == item.products_id }
                             //Log.e("Products change", "${productChange}")

@@ -2,6 +2,7 @@ package com.yubstore.piking.views.products
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
@@ -15,9 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.yubstore.piking.model.ProductsModel
+import com.yubstore.piking.service.Inventory
 import com.yubstore.piking.util.TopBar
 
 //@OptIn(ExperimentalComposeUiApi::class)
@@ -29,6 +33,8 @@ fun LocationItemDetails(
     quantity: Int,
     openDrawer: () -> Unit,
 ){
+    val context = LocalContext.current
+    val productsModel = ProductsModel()
     var location = remember {mutableStateOf(TextFieldValue("111" + location.padStart(12, '0')))}
     var productsId = remember {
         mutableStateOf(TextFieldValue(productsId))
@@ -83,6 +89,18 @@ fun LocationItemDetails(
                 focusManager.moveFocus(FocusDirection.Next)
             }
         )
+        Button(onClick = {
+            //your onclick code here
+            var inventory = Inventory(location.value.text, productsId.value.text, quantity.value.text)
+            productsModel.saveInventory(inventory, context)
+            location.value = TextFieldValue("")
+            productsId.value = TextFieldValue("")
+            quantity.value = TextFieldValue("")
+            //focusManager.moveFocus(FocusDirection.Up)
+            a.requestFocus()
+        }) {
+            Text(text = "Guardar")
+        }
     }
 
 }

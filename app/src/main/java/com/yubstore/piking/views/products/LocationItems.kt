@@ -64,7 +64,7 @@ fun LocationsItems(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ){
-                        Text("Productos con varias localizaciónes")
+                        Text("Producto con varias localizaciónes")
                     }
                 }
                 this.items(productsLocation) { product ->

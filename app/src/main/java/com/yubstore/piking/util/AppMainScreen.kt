@@ -85,7 +85,7 @@ fun AppMainScreen() {
         ) {
             NavHost(
                 navController = navController,
-                startDestination = DrawerScreens.Home.route//DrawerScreens.Login.route //DrawerScreens.Home.route
+                startDestination = /*DrawerScreens.Login.route */DrawerScreens.Home.route
             ) {
                 composable(DrawerScreens.Home.route, arguments = listOf(navArgument("idcliente") { type = NavType.StringType })) { backStackEntry ->
                     var idcliente = backStackEntry.arguments?.getString("idcliente")

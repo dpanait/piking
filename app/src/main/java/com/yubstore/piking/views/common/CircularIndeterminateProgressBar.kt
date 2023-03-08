@@ -1,9 +1,6 @@
 package com.yubstore.piking.views.common
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -11,12 +8,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CircularIndeterminateProgressBar(isDisplayed: Boolean) {
+fun CircularIndeterminateProgressBar(
+    isDisplayed: Boolean,
+    modifier: Modifier?
+) {
+    var myModuifier: Modifier
+    if(modifier == null){
+        myModuifier = Modifier.fillMaxWidth().padding(top = 20.dp)
+    } else {
+        myModuifier = modifier
+    }
     if (isDisplayed) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 20.dp),
+            modifier = myModuifier,
             horizontalArrangement = Arrangement.Center
         ) {
             CircularProgressIndicator(

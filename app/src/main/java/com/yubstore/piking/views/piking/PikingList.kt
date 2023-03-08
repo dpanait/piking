@@ -1,25 +1,18 @@
 package com.yubstore.piking.views.piking
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.yubstore.piking.model.PikingModel
 import com.yubstore.piking.service.*
 import com.yubstore.piking.views.common.CircularIndeterminateProgressBar
-import com.yubstore.piking.views.common.LoadingAnimation
-import io.ktor.client.call.*
-import io.ktor.client.statement.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 
 @Composable
 fun PikingList(
@@ -45,7 +38,7 @@ fun PikingList(
         ) {
             if(isLoading.value) {
                 item{
-                    CircularIndeterminateProgressBar(isLoading.value)
+                    CircularIndeterminateProgressBar(isLoading.value, Modifier.fillMaxWidth().padding(top = 20.dp))
                 }
 
             } else {
