@@ -5,9 +5,13 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.yubstore.piking.model.AlmacenModel
 import com.yubstore.piking.service.APP_DATA
+import androidx.compose.ui.text.TextStyle
 
 @Composable
 fun TopBar(
@@ -27,7 +31,7 @@ fun TopBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End.also { Arrangement.SpaceAround }
             ){
-                Text(" ${bodyContent.value}")
+                Text(" ${bodyContent.value}", style = TextStyle(fontSize = 12.sp) )
             }
 
         },

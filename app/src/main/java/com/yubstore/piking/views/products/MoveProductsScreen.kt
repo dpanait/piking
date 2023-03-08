@@ -2,10 +2,7 @@ package com.yubstore.piking.views.products
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -22,9 +19,13 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.yubstore.piking.model.AlmacenModel
 import com.yubstore.piking.model.ProductsModel
 import com.yubstore.piking.service.MoveProducts
@@ -50,10 +51,13 @@ fun MoveProductsScreen(
     var quantityProducts by remember {
         mutableStateOf(TextFieldValue(""))
     }
+    var alertMsg = remember{ mutableStateOf("") }
+    var alertMsgStatus = remember { mutableStateOf(false) }
+
     val focusManager = LocalFocusManager.current
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
-            title = "Mover Productos",
+            title = "Productos",
             buttonIcon = Icons.Rounded.Menu,
             almacenModel = almacenModel,
             onButtonClicked = { openDrawer() }
@@ -114,15 +118,65 @@ fun MoveProductsScreen(
             Button(onClick = {
                 //your onclick code here
                 Log.i("Clik", "Mover producto")
-                val moveProducts = MoveProducts(location.text, productsId.text, quantityProducts.text, newLocation.text)
-                productsModel.saveMoveProducts(moveProducts, context)
-                location = TextFieldValue("")
-                productsId = TextFieldValue("")
-                quantityProducts = TextFieldValue("")
-                newLocation = TextFieldValue("")
-                a.requestFocus()
+                if( location.text.isNotEmpty()
+                    && productsId.text.isNotEmpty()
+                    && quantityProducts.text.isNotEmpty() ) {
+                    val moveProducts = MoveProducts(
+                        location.text,
+                        productsId.text,
+                        quantityProducts.text,
+                        newLocation.text
+                    )
+                    productsModel.saveMoveProducts(moveProducts, context)
+                    location = TextFieldValue("")
+                    productsId = TextFieldValue("")
+                    quantityProducts = TextFieldValue("")
+                    newLocation = TextFieldValue("")
+                    a.requestFocus()
+                } else {
+                    alertMsg.value = "Tienes que rellenar todos los campos"
+                    alertMsgStatus.value = true
+                }
             }) {
                 Text(text = "Mover")
+            }
+            if(alertMsgStatus.value) {
+                AlertDialog(
+                    onDismissRequest = { alertMsgStatus.value = false },
+                    title = {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(text = "Producto", style = TextStyle(color = Color.DarkGray,fontWeight = FontWeight.Bold, fontSize = 18.sp))
+                        }
+                    },
+                    text = {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+
+                            Text(alertMsg.value)
+
+                        }
+                    },
+                    buttons = {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ){
+                            Button(
+                                modifier = Modifier.width(100.dp),
+                                onClick = { alertMsgStatus.value = false }
+                            ) {
+                                Text("Cerrar")
+                            }
+                        }
+                    }
+                )
             }
         }
     }

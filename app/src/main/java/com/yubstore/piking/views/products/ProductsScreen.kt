@@ -113,7 +113,7 @@ fun ProductsScreen(
                     .fillMaxWidth()
             ){
                 Text(
-                    text = "Para comprobar si un producto tiene varias localizaciones, despues de scanear el codigo de bara del producto toca la lupa",
+                    text = "Para comprobar si un producto tiene varias localizaciones, despues de escanear el codigo de bara del producto toca la lupa",
                     textAlign = TextAlign.Center
                 )
             }

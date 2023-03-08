@@ -237,8 +237,8 @@ fun ListPiking(
                                 productsDataList.find { pro -> pro.productsId == item.products_id }
                             //Log.e("Products change", "${productChange}")
                         }
-                        //pikingModel.savePiking(pikingList)
-                        //navController.popBackStack()
+                        pikingModel.savePiking(pikingList)
+                        navController.popBackStack()
 
                     }) {
                         Text(text = "Guardar")
