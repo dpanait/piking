@@ -11,7 +11,7 @@ object APP_DATA{
     val environment = "pre"
     var version = ""
     var userSku = "22G3"
-    var IDCLIENTE = "192"
+    var IDCLIENTE = ""
     var cajasId = ""
     var storeName = ""
 }
@@ -22,7 +22,7 @@ object URL_API_TEST {
 
 }
 object URL_API {
-    var URL = "https://yuubbb.com/pro/buy00/yuubbbshop/"
+    var URL = "https://yuubbb.com/pro/buy15.72/yuubbbshop/"
 
 }
 object URL_VERSION{

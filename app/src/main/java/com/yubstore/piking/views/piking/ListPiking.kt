@@ -241,7 +241,7 @@ fun ListPiking(
                         navController.popBackStack()
 
                     }) {
-                        Text(text = "Guardar")
+                        Text(text = "Picking")
 
                     }
                 }
@@ -249,7 +249,7 @@ fun ListPiking(
             }
             //println("Scroll Value: $itemIndex")
             coroutineScope.launch {
-                scrollState.scrollTo(itemIndex)
+                //scrollState.scrollTo(itemIndex)
             }
         }
         /*productsHeightList.forEach { item ->

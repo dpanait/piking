@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavHostController
 import com.yubstore.piking.model.AlmacenModel
+import com.yubstore.piking.service.APP_DATA
 import com.yubstore.piking.util.SearchView
 import com.yubstore.piking.util.TopBar
 import com.yubstore.piking.views.common.LoadingAnimation
@@ -21,7 +22,7 @@ import com.yubstore.piking.views.common.LoadingAnimation
 @Composable
 fun PikingScreen(
     navController: NavHostController,
-    idCliente: String?,
+    iDCliente: String?,
     almacenModel: AlmacenModel,
     openDrawer: () -> Unit
 ) {
@@ -46,7 +47,7 @@ fun PikingScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ){
 
-
+                var idCliente = APP_DATA.IDCLIENTE;
                 PikingList(navController, textState, idCliente)
                 //Text(text = "Piking Page content here.")
 

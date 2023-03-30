@@ -40,6 +40,7 @@ fun LoginScreen(
     val vm by remember { mutableStateOf(LoginModel()) }
     val coroutineScope = rememberCoroutineScope()
     var textError by remember{ mutableStateOf("")}
+    viewmodel.getVersion()
     //val coroutineScope1 = rememberCoroutineScope()
     //val coroutineScope2 = rememberCoroutineScope()
 

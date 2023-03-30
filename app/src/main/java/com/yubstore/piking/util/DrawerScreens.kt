@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.yubstore.piking.R
+import com.yubstore.piking.service.APP_DATA
 
 sealed class DrawerScreens(val title: String, val route: String, var icon: Int, var param: String) {
     //val painter = painterResource(id = R.drawable.ic_logo)
@@ -28,7 +29,7 @@ sealed class DrawerScreens(val title: String, val route: String, var icon: Int, 
     //object Login : DrawerScreens( "Login", "login", Icons.Filled.Close, "")
     object Home : DrawerScreens("Home", "home/{idcliente}", R.mipmap.home, "1")
     object Account : DrawerScreens("Account", "account", R.mipmap.user,"")
-    object Piking : DrawerScreens("Piking", "piking/{idcliente}", R.mipmap.piking,"192")
+    object Piking : DrawerScreens("Piking", "piking/{idcliente}", R.mipmap.piking,APP_DATA.IDCLIENTE)
     object Products : DrawerScreens("Inventario", "products", R.mipmap.envio/*Icons.Filled.ShoppingCart*/,"")
     object MoveProducts : DrawerScreens("Mover productos", "moveProducts", R.mipmap.envio/*Icons.Filled.ShoppingCart*/,"")
     object Login : DrawerScreens( "Login", "login", R.mipmap.login, "")
